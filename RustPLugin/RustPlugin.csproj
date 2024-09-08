@@ -417,6 +417,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy C:\Users\DiiTz\source\repos\RustPLugin\RustPLugin\Modding.cs E:\rustserver\oxide\plugins\Modding.cs</PreBuildEvent>
+    <PreBuildEvent>copy B:\Github\RustPlugin\RustPLugin\Modding.cs E:\rustserver\oxide\plugins\Modding.cs</PreBuildEvent>
   </PropertyGroup>
 </Project>
