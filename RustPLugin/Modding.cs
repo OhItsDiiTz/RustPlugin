@@ -42,7 +42,6 @@ namespace Oxide.Plugins
 
 			public BasePlayer player;
 			public bool text_created;
-			public bool crazy_heli;
 		}
 
 		bool CanUse(ulong userID)
@@ -125,19 +124,9 @@ namespace Oxide.Plugins
 					{
 						if (player.GetMountedVehicle() != null)
 						{
-							if (customBasePlayer.crazy_heli)
-							{
-								if (player.GetMountedVehicle().name == "assets/content/vehicles/attackhelicopter/attackhelicopter.entity.prefab")
-								{
-									AttackHelicopter attackHeli = (AttackHelicopter)player.GetMountedVehicle();
-									attackHeli.GetRockets().timeBetweenRockets = 0.1f;
-									attackHeli.GetRockets().reloadTime = 0.2f;
-								}
-							}
-
 							if (player.GetMountedVehicle().GetFuelSystem() != null)
 							{
-								player.GetMountedVehicle().GetFuelSystem().AddStartingFuel(1000);
+								player.GetMountedVehicle().GetFuelSystem().AddFuel(1);
 							}
 						}
 					}
@@ -295,39 +284,40 @@ namespace Oxide.Plugins
 		object OnDefaultItemsReceive(PlayerInventory inventory)
 		{
 
-            if (CanUse(inventory.baseEntity.userID))
-            {
-				inventory.Strip();
-				global::BaseGameMode activeGameMode = global::BaseGameMode.GetActiveGameMode(true);
-				if (activeGameMode != null && activeGameMode.HasLoadouts())
-				{
-					global::BaseGameMode.GetActiveGameMode(true).LoadoutPlayer(inventory.baseEntity);
-					return true;
-				}
-				if (global::PlayerInventory.IsBirthday() && !inventory.baseEntity.IsInTutorial)
-				{
-					inventory.GiveItem(global::ItemManager.CreateByName("cakefiveyear", 1, 0UL), inventory.containerBelt);
-					inventory.GiveItem(global::ItemManager.CreateByName("partyhat", 1, 0UL), inventory.containerWear);
-				}
-				if (global::PlayerInventory.IsChristmas() && !inventory.baseEntity.IsInTutorial)
-				{
-					inventory.GiveItem(global::ItemManager.CreateByName("snowball", 1, 0UL), inventory.containerBelt);
-					inventory.GiveItem(global::ItemManager.CreateByName("snowball", 1, 0UL), inventory.containerBelt);
-					inventory.GiveItem(global::ItemManager.CreateByName("snowball", 1, 0UL), inventory.containerBelt);
-				}
-				inventory.GiveItem(global::ItemManager.CreateByName("ammo.rifle", 1000, 0), inventory.containerMain);
-				Item rifle = global::ItemManager.CreateByName("rifle.ak", 1, 0);
-				inventory.GiveItem(rifle, inventory.containerBelt);
+   //         if (CanUse(inventory.baseEntity.userID))
+   //         {
+			//	inventory.Strip();
+			//	global::BaseGameMode activeGameMode = global::BaseGameMode.GetActiveGameMode(true);
+			//	if (activeGameMode != null && activeGameMode.HasLoadouts())
+			//	{
+			//		global::BaseGameMode.GetActiveGameMode(true).LoadoutPlayer(inventory.baseEntity);
+			//		return true;
+			//	}
+			//	if (global::PlayerInventory.IsBirthday() && !inventory.baseEntity.IsInTutorial)
+			//	{
+			//		inventory.GiveItem(global::ItemManager.CreateByName("cakefiveyear", 1, 0UL), inventory.containerBelt);
+			//		inventory.GiveItem(global::ItemManager.CreateByName("partyhat", 1, 0UL), inventory.containerWear);
+			//	}
+			//	if (global::PlayerInventory.IsChristmas() && !inventory.baseEntity.IsInTutorial)
+			//	{
+			//		inventory.
+			//		inventory.GiveItem(global::ItemManager.CreateByName("snowball", 1, 0UL), inventory.containerBelt);
+			//		inventory.GiveItem(global::ItemManager.CreateByName("snowball", 1, 0UL), inventory.containerBelt);
+			//		inventory.GiveItem(global::ItemManager.CreateByName("snowball", 1, 0UL), inventory.containerBelt);
+			//	}
+			//	inventory.GiveItem(global::ItemManager.CreateByName("ammo.rifle", 1000, 0), inventory.containerMain);
+			//	Item rifle = global::ItemManager.CreateByName("rifle.ak", 1, 0);
+			//	inventory.GiveItem(rifle, inventory.containerBelt);
 
-				inventory.GiveItem(global::ItemManager.CreateByName("metal.facemask", 1, 0), inventory.containerWear);
-				inventory.GiveItem(global::ItemManager.CreateByName("metal.plate.torso", 1, 0), inventory.containerWear);
-				inventory.GiveItem(global::ItemManager.CreateByName("roadsign.kilt", 1, 0), inventory.containerWear);
-				inventory.GiveItem(global::ItemManager.CreateByName("roadsign.gloves", 1, 0), inventory.containerWear);
-				inventory.GiveItem(global::ItemManager.CreateByName("hoodie", 1, 0), inventory.containerWear);
-				inventory.GiveItem(global::ItemManager.CreateByName("pants", 1, 0), inventory.containerWear);
-				inventory.GiveItem(global::ItemManager.CreateByName("shoes.boots", 1, 0), inventory.containerWear);
-				return (object)true;
-			}
+			//	inventory.GiveItem(global::ItemManager.CreateByName("metal.facemask", 1, 0), inventory.containerWear);
+			//	inventory.GiveItem(global::ItemManager.CreateByName("metal.plate.torso", 1, 0), inventory.containerWear);
+			//	inventory.GiveItem(global::ItemManager.CreateByName("roadsign.kilt", 1, 0), inventory.containerWear);
+			//	inventory.GiveItem(global::ItemManager.CreateByName("roadsign.gloves", 1, 0), inventory.containerWear);
+			//	inventory.GiveItem(global::ItemManager.CreateByName("hoodie", 1, 0), inventory.containerWear);
+			//	inventory.GiveItem(global::ItemManager.CreateByName("pants", 1, 0), inventory.containerWear);
+			//	inventory.GiveItem(global::ItemManager.CreateByName("shoes.boots", 1, 0), inventory.containerWear);
+			//	return (object)true;
+			//}
 
 			return null;
 		}
@@ -343,14 +333,12 @@ namespace Oxide.Plugins
 			{
 				ent.net = Network.Net.sv.CreateNetworkable();
 			}
-			ent.creationFrame = Time.frameCount;
 			ent.PreInitShared();
 			ent.InitShared();
 			//ent.ServerInit();
 			ent.PostInitShared();
 			ent.UpdateNetworkGroup();
 			ent.ServerInitPostNetworkGroupAssign();
-			ent.isSpawned = true;
 			ent.SendNetworkUpdateImmediate(true);
 
 			global::GlobalNetworkHandler server = global::GlobalNetworkHandler.server;
@@ -634,19 +622,6 @@ namespace Oxide.Plugins
 				projectile_str = arg.GetString(0);
 			}
 		}
-		[ConsoleCommand("attackheli.crazymode")]
-		void attackheli_crazymode(ConsoleSystem.Arg arg)
-		{
-			global::BasePlayer player = arg.Player();
-			if (!player)
-			{
-				return;
-			}
-			if (CanUse(player.userID))
-			{
-				FindPlayer(player).crazy_heli = arg.GetBool(0);
-			}
-		}
 
 		[ConsoleCommand("prefabs.dump")]
 		void prefabs_dump(ConsoleSystem.Arg arg)
@@ -874,6 +849,20 @@ namespace Oxide.Plugins
 			if (CanUse(player.userID))
 			{
 				ConvertImageToWorld(player, "C:\\pickles.png", spawn_str);
+			}
+		}
+
+		[ConsoleCommand("spawn.ohitsdiitz")]
+		void spawn_ohitsdiitz(ConsoleSystem.Arg arg)
+		{
+			global::BasePlayer player = arg.Player();
+			if (!player)
+			{
+				return;
+			}
+			if (CanUse(player.userID))
+			{
+				ConvertImageToWorld(player, "D:\\images\\ohitsdiitz.png", spawn_str);
 			}
 		}
 
